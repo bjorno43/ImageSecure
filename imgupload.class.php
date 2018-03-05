@@ -220,9 +220,9 @@ class ImageUpload {
     /* Handles the uploading of images */
     public function uploadImages($files){
         // Checks if the required PHP extension(s) are NOT loaded
-        if ($this->check_phpExt()){
-            array_push($this->error, 
-                "The PHP fileinfo extension isn't loaded and 
+        if ( ! $this->check_phpExt()){
+            array_push($this->error,
+                "The PHP fileinfo extension isn't loaded and
                  ImageUpload was unable to load it for you.");
             $this->obj->error = $this->error;
             return $this->obj;
@@ -230,15 +230,12 @@ class ImageUpload {
 
         // Checks if db table exists. Creates it if nessesary
         if ( ! $this->createTable()){
-            if($this->error !== NULL){
-                $this->obj->error = $this->error;
-                return $this->obj;
-            } else {
+            if($this->error == NULL){
                 // This should never happen, but it's here just in case
                 array_push($this->error, "Unknown error! Failed to load ImageUpload class!");
-                $this->obj->error = $this->error;
-                return $this->obj;
             }
+            $this->obj->error = $this->error;
+            return $this->obj;
         }
 
         // Checks if a htaccess file should be created and creates one if needed
@@ -254,8 +251,8 @@ class ImageUpload {
         $files = $this->reArrayFiles($files);
         foreach ($files as $file) {
 
-            // Checks if $file['tmp_name'] is empty. This occurs when a file is 
-            // bigger than allowed by the 'post_max_size' 
+            // Checks if $file['tmp_name'] is empty. This occurs when a file is
+            // bigger than allowed by the 'post_max_size'
             // and/or 'upload_max_filesize' settings in php.ini
             if(empty($file['tmp_name'])){
                 array_push($this->info, "File: ". $file['name'] .
@@ -316,12 +313,11 @@ class ImageUpload {
                 $this->obj->info = $this->info;
                 $this->obj->ids = $this->ids;
 
-                return $this->obj;
             } else {
                 $this->error = array_unique($this->error);
                 $this->obj->error = $this->error;
-                return $this->obj;
             }
+            return $this->obj;
         }
     }
 
