@@ -16,7 +16,7 @@ echo "Your images can be viewed here:<br/><br/>";
 
 if(!empty($result->ids)){
     foreach($result->ids as $id){
-        echo "http://home.icecub.nl/image.php?". $id;
+        echo "https://your_website.com/image.php?". $id;
     }
 }
 
