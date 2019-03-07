@@ -151,6 +151,15 @@ Class ImageUpload {
 		}
 	}
 
+	/* Check if a folder exist. Try to create one with 755 permission if it does not */
+	private function check_image_folder($path) {
+		if (!is_dir($path)) {
+			return @mkdir($path, '755', true);
+		} else {
+			return true;
+		}
+	}
+
 	/* Creates a file with a random name */
 	private function tempnam_sfx($path, $suffix){
 		do {
@@ -241,34 +250,40 @@ Class ImageUpload {
 						if($this->check_img_mime($file['tmp_name'])){
 							// Checks the size of the the image
 							if($this->check_img_size($file['tmp_name'])){
-								// Creates a file in the upload directory with a random name
-								$uploadfile = $this->tempnam_sfx($this->folder, ".tmp");
-								
-								// Moves the image to the created file
-								if (move_uploaded_file($file['tmp_name'], $uploadfile)) {
-									// Inserts the file data into the db
-									$this->stmt = $this->dbh->prepare("INSERT INTO ". DB_TABLE ." (name, original_name, mime_type) VALUES (:name, :oriname, :mime)");
-
-									$this->bind(':name', basename($uploadfile));
-									$this->bind(':oriname', basename($file['name']));
-									$this->bind(':mime', $this->mtype);
-
-									try{
-										$this->stmt->execute();
-									}
-									catch(PDOException $e){
-										array_push($this->error, $e->getMessage());
-										$this->obj->error = $this->error;
-										return $this->obj;
-									}
+								// Creates a folder to store the images if it does not exist
+								if($this->check_image_folder($this->folder)) {
+									// Creates a file in the upload directory with a random name
+									$uploadfile = $this->tempnam_sfx($this->folder, ".tmp");
 									
-									array_push($this->ids, $this->dbh->lastInsertId());
-									array_push($this->info, "File: ". $file['name'] ." was succesfully uploaded!");
+									// Moves the image to the created file
+									if (move_uploaded_file($file['tmp_name'], $uploadfile)) {
+										// Inserts the file data into the db
+										$this->stmt = $this->dbh->prepare("INSERT INTO ". DB_TABLE ." (name, original_name, mime_type) VALUES (:name, :oriname, :mime)");
 
-									continue;
+										$this->bind(':name', basename($uploadfile));
+										$this->bind(':oriname', basename($file['name']));
+										$this->bind(':mime', $this->mtype);
+
+										try{
+											$this->stmt->execute();
+										}
+										catch(PDOException $e){
+											array_push($this->error, $e->getMessage());
+											$this->obj->error = $this->error;
+											return $this->obj;
+										}
+										
+										array_push($this->ids, $this->dbh->lastInsertId());
+										array_push($this->info, "File: ". $file['name'] ." was succesfully uploaded!");
+
+										continue;
+									} else {
+										unlink($file['tmp_name']);
+										array_push($this->info, "Unable to move file: ". $file['name'] ." to target folder. The file is removed!");
+									}
 								} else {
 									unlink($file['tmp_name']);
-									array_push($this->info, "Unable to move file: ". $file['name'] ." to target folder. The file is removed!");
+									array_push($this->info, "Unable to move file: ". $file['name'] .". The target folder does not exist and cannot be created. The file is removed!");
 								}
 							} else {
 								array_push($this->info, "File: ". $file['name'] ." exceeds the maximum file size of: ". F_SIZE ."B. The file is removed!");
