@@ -91,7 +91,6 @@ Class ImageUpload
 		try{ $this->stmt->execute(); }
 		catch(PDOException $e)
 		{
-			echo '<hr>line 92:<hr>';
 			array_push($this->error, $e->getMessage());
 			return false;
 		}
