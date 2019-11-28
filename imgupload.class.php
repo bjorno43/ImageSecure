@@ -237,6 +237,7 @@ Class ImageUpload
 	{
 		# Checks if the required PHP extension(s) are loaded
 		if($this->check_phpExt()){
+###################################################################################################
 			# Checks if db table exists. Creates it if nessesary
 			if($this->createTable()){
 				# Checks if a htaccess file should be created and creates one if needed
@@ -326,6 +327,7 @@ Class ImageUpload
 					return $this->obj;
 				}
 			}
+###################################################################################################
 		} else {
 			array_push($this->error, "The PHP fileinfo extension isn't loaded and "
 			. "ImageUpload was unable to load it for you.");
