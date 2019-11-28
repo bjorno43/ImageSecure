@@ -253,6 +253,47 @@ Class ImageUpload
 				$files = $this->reArrayFiles($files);
 				foreach($files as $file){
 				## border for foreach files
+				}
+				// Checks if the error array is empty
+				foreach ($this->error as $key => $value) {
+					if (empty($value)) {
+					   unset($this->error[$key]);
+					}
+				}
+				if (empty($this->error)) {
+
+					$this->obj->info = $this->info;
+					$this->obj->ids = $this->ids;
+					
+					return $this->obj;
+				} else {
+					$this->error = array_unique($this->error);
+					$this->obj->error = $this->error;
+					return $this->obj;
+				}
+			} else {
+				if($this->error !== NULL){
+					$this->obj->error = $this->error;
+					return $this->obj;
+				} else {
+					// This should never happen, but it's here just in case
+					array_push($this->error, "Unknown error! Failed to load ImageUpload class!");
+					$this->obj->error = $this->error;
+					return $this->obj;
+				}
+			}
+###################################################################################################
+		} else {
+			array_push($this->error, "The PHP fileinfo extension isn't loaded and "
+			. "ImageUpload was unable to load it for you.");
+			$this->obj->error = $this->error;
+			return $this->obj;
+		}
+	}
+#--------------------------------------------------------------------------------------------------
+	# check $files array from uploadImages($files)
+	public function checkFiles()
+	{
 ###################################################################################################
 					# Checks if $file['tmp_name'] is empty. This occurs when a file is bigger than
 					# allowed by the 'post_max_size' and/or 'upload_max_filesize' settings in php.ini
@@ -301,48 +342,6 @@ Class ImageUpload
 						array_push($this->info, "File: ". $file['name'] ." exceeds the maximum file size that this server allowes to be uploaded!");
 					}
 ###################################################################################################
-				}
-				// Checks if the error array is empty
-				foreach ($this->error as $key => $value) {
-					if (empty($value)) {
-					   unset($this->error[$key]);
-					}
-				}
-				if (empty($this->error)) {
-
-					$this->obj->info = $this->info;
-					$this->obj->ids = $this->ids;
-					
-					return $this->obj;
-				} else {
-					$this->error = array_unique($this->error);
-					$this->obj->error = $this->error;
-					return $this->obj;
-				}
-			} else {
-				if($this->error !== NULL){
-					$this->obj->error = $this->error;
-					return $this->obj;
-				} else {
-					// This should never happen, but it's here just in case
-					array_push($this->error, "Unknown error! Failed to load ImageUpload class!");
-					$this->obj->error = $this->error;
-					return $this->obj;
-				}
-			}
-###################################################################################################
-		} else {
-			array_push($this->error, "The PHP fileinfo extension isn't loaded and "
-			. "ImageUpload was unable to load it for you.");
-			$this->obj->error = $this->error;
-			return $this->obj;
-		}
-	}
-#--------------------------------------------------------------------------------------------------
-	# check $files array from uploadImages($files)
-	public function checkFiles()
-	{
-
 	}
 #--------------------------------------------------------------------------------------------------
 	# Show the image in the browser
