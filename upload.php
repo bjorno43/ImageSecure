@@ -21,6 +21,6 @@ if(!empty($result->ids))
 {
     foreach($result->ids as $id)
 	{
-        echo 'image.php?'. $id;
+        echo '<br>image.php?'. $id;
     }
 }
