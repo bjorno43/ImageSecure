@@ -242,11 +242,7 @@ Class ImageUpload
 			if($this->createTable()){
 				# Checks if a htaccess file should be created and creates one if needed
 				if($this->htaccess){
-					if(!$this->createHtaccess()){
-						array_push($this->error, "Unable to create htaccess file.");
-						$this->obj->error = $this->error;
-						return $this->obj;
-					}
+					$this->checkHtaccess();
 				}
 				
 				# Re-arranges the $_FILES array
@@ -295,7 +291,12 @@ Class ImageUpload
 	# Checks if a htaccess file should be created and creates one if needed
 	public function checkHtaccess()
 	{
-
+		if(!$this->createHtaccess()){
+			array_push($this->error, "Unable to create htaccess file.");
+			$this->obj->error = $this->error;
+			return $this->obj;
+		}
+		#
 	}
 #--------------------------------------------------------------------------------------------------
 	# check $files array from uploadImages($files)
