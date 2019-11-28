@@ -339,6 +339,12 @@ Class ImageUpload
 		}
 	}
 #--------------------------------------------------------------------------------------------------
+	# check $files array from uploadImages($files)
+	public function checkFiles()
+	{
+
+	}
+#--------------------------------------------------------------------------------------------------
 	# Show the image in the browser
 	public function showImage($id)
 	{
