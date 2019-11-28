@@ -252,6 +252,8 @@ Class ImageUpload
 				# Re-arranges the $_FILES array
 				$files = $this->reArrayFiles($files);
 				foreach($files as $file){
+				## border for foreach files
+###################################################################################################
 					# Checks if $file['tmp_name'] is empty. This occurs when a file is bigger than
 					# allowed by the 'post_max_size' and/or 'upload_max_filesize' settings in php.ini
 					if(!empty($file['tmp_name'])){
@@ -298,6 +300,7 @@ Class ImageUpload
 					} else {
 						array_push($this->info, "File: ". $file['name'] ." exceeds the maximum file size that this server allowes to be uploaded!");
 					}
+###################################################################################################
 				}
 				// Checks if the error array is empty
 				foreach ($this->error as $key => $value) {
