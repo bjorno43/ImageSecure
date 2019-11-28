@@ -137,8 +137,7 @@ echo $result->info[0];
 Replace id with the id of the image.
 
 # FAQ:
-## Question 01:
-**I'm getting the error "The image cannot be displayed because it contains errors".**
+## Question 01: **I'm getting the error "The image cannot be displayed because it contains errors".**
 The ImageUpload class renames all uploaded images to a random name and changes the extension to '.tmp'. In order to correctly
 display the image to the visitor, it needs to send headers towards the browser to tell it what kind of file it is and how it should handle it.
 Headers however cannot be sent if there's already output sent towards the browser. And this is VERY strict! It can be as simple as some text or PHP echo,
@@ -146,23 +145,19 @@ or as difficult a Byte Order Marker because you've edited some of the class's fi
 See if your editor is able to save the file with ANSI or UTF-8 encoding without a BOM.
 This is also why you should use the image.php file to retrieve the image. It was coded and saved in such a way that no output is sent towards the browser before displaying the image.
 
-## Question 02:
-**I'm getting the error "Unable to create htaccess file.".**
+## Question 02: **I'm getting the error "Unable to create htaccess file.".**
 Make sure that the ImageUpload class has sufficient read/write permissions to your upload directory. This directory should normally be owned by your webserver user (apache for example) so it has all the rights nessesary. Do NOT chmod 777 the directory! This would make you vulnerable!
 
-## Question 03:
-**I'm getting the error "The PHP fileinfo extension isn't loaded and ImageUpload was unable to load it for you.".**
+## Question 03: **I'm getting the error "The PHP fileinfo extension isn't loaded and ImageUpload was unable to load it for you.".**
 The ImageUpload class relies on the PHP fileinfo extension to validate the image file. If this extension isn't installed or disabled, the class can't function.
 Please contact your server provider about this issue and ask them to install / enable it.
 
-## Question 04:
-**I'm getting the error " 'file' exceeds the maximum file size that this server allowes to be uploaded!".**
+## Question 04: **I'm getting the error " 'file' exceeds the maximum file size that this server allowes to be uploaded!".**
 This means that the visitor is trying to upload a file that is larger than what is allowed by the 'post_max_size' and/or 'upload_max_filesize' settings in your php.ini file. 
 Either adjust the maximum file size allowed in your config.php to match the php.ini settings or edit your php.ini file to
 allow larger files to be uploaded.
 
-## Question 05:
-**I have other questions and/or suggestions about the ImageUpload class.**
+## Question 05: **I have other questions and/or suggestions about the ImageUpload class.**
 I'm always happy to hear from my users! Send me an email on bjorno43@hotmail.com with the subject "ImageUpload Class".
 I will reply to you as soon as possible! Keep in mind though that I have a busy life so it could take a few days before you get a reply.
 
