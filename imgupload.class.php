@@ -251,8 +251,9 @@ Class ImageUpload
 				
 				# Re-arranges the $_FILES array
 				$files = $this->reArrayFiles($files);
-				foreach($files as $file){
-				## border for foreach files
+				foreach($files as $file)
+				{
+					$this->checkFiles($files,$file);
 				}
 				// Checks if the error array is empty
 				foreach ($this->error as $key => $value) {
@@ -292,7 +293,7 @@ Class ImageUpload
 	}
 #--------------------------------------------------------------------------------------------------
 	# check $files array from uploadImages($files)
-	public function checkFiles()
+	public function checkFiles($files,$file)
 	{
 ###################################################################################################
 					# Checks if $file['tmp_name'] is empty. This occurs when a file is bigger than
