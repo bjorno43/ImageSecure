@@ -30,7 +30,7 @@ Class ImageUpload
 	private $htaccess = H_FILE;
 	private $f_size = F_SIZE;
 #--------------------------------------------------------------------------------------------------
-	/* Set up a PDO instance */
+	# Set up a PDO instance
 	public function __construct()
 	{
 		# Set DSN
@@ -55,7 +55,7 @@ Class ImageUpload
 		$this->obj = new StdClass;
 	}
 #--------------------------------------------------------------------------------------------------
-	/* Custom bindParam function */
+	# Custom bindParam function
 	private function bind($param, $value, $type = null)
 	{
 		if (is_null($type))
@@ -79,7 +79,7 @@ Class ImageUpload
 		$this->stmt->bindValue($param, $value, $type);
 	}
 #--------------------------------------------------------------------------------------------------
-	/* Checks if the table already exists. If not, creates one */
+	# Checks if the table already exists. If not, creates one
 	private function createTable()
 	{
 		# Check if table already exists
@@ -118,7 +118,7 @@ Class ImageUpload
 		#
 	}
 #--------------------------------------------------------------------------------------------------
-	/* Checks if the htaccess file exists. If not, creates one */
+	# Checks if the htaccess file exists. If not, creates one
 	private function createHtaccess()
 	{
 		if (!file_exists($this->folder . '/.htaccess'))
@@ -139,7 +139,7 @@ Class ImageUpload
 		#
 	}
 #--------------------------------------------------------------------------------------------------
-	/* Checks if required PHP extensions are loaded. Tries to load them if not */
+	# Checks if required PHP extensions are loaded. Tries to load them if not
 	private function check_phpExt()
 	{
 		if (!extension_loaded('fileinfo'))
@@ -164,11 +164,11 @@ Class ImageUpload
 		#
 	}
 #--------------------------------------------------------------------------------------------------
-	/* Creates a file with a random name */
+	# Creates a file with a random name
 	private function tempnam_sfx($path, $suffix)
 	{
 		do {
-			$file = $path."/".mt_rand().$suffix;
+			$file = $path . "/" . mt_rand() . $suffix;
 			$fp = @fopen($file, 'x');
 		}
 		while(!$fp);
@@ -177,7 +177,7 @@ Class ImageUpload
 		return $file;
 	}
 #--------------------------------------------------------------------------------------------------
-	/* Checks the true mime type of the given file */
+	# Checks the true mime type of the given file
 	private function check_img_mime($tmpname)
 	{
 		$finfo = finfo_open( FILEINFO_MIME_TYPE );
@@ -188,7 +188,7 @@ Class ImageUpload
 		finfo_close( $finfo );
 	}
 #--------------------------------------------------------------------------------------------------
-	/* Checks if the image isn't to large */
+	# Checks if the image isn't to large
 	private function check_img_size($tmpname)
 	{
 		$size_conf = substr(F_SIZE, -1);
@@ -214,7 +214,7 @@ Class ImageUpload
 		#
 	}
 #--------------------------------------------------------------------------------------------------
-	/* Re-arranges the $_FILES array */
+	# Re-arranges the $_FILES array
 	private function reArrayFiles($files)
 	{
 		$file_ary = array();
@@ -232,7 +232,7 @@ Class ImageUpload
 		return $file_ary;
 	}
 #--------------------------------------------------------------------------------------------------
-	/* Handles the uploading of images */
+	# Handles the uploading of images
 	public function uploadImages($files)
 	{
 		# Checks if the required PHP extension(s) are loaded
@@ -334,7 +334,7 @@ Class ImageUpload
 		}
 	}
 #--------------------------------------------------------------------------------------------------
-	/* Show the image in the browser */
+	# Show the image in the browser
 	public function showImage($id)
 	{
 		$this->stmt = $this->dbh->prepare("SELECT name, original_name, mime_type "
@@ -353,13 +353,14 @@ Class ImageUpload
 
 		$newfile = $result['original_name'];
 
-		/* Send headers and file to visitor for display */
+		# Send headers and file to visitor for display
 		header("Content-Type: " . $result['mime_type']);
 		readfile(F_PATH . '/' . $result['name']);
 	}
 #--------------------------------------------------------------------------------------------------
-	/* Force a download of the image */
-	public function downloadImage($id){
+	# Force a download of the image
+	public function downloadImage($id)
+	{
 		$this->stmt = $this->dbh->prepare("SELECT name, original_name, mime_type FROM "
 		. DB_TABLE . " WHERE id=:id");
 
@@ -377,7 +378,7 @@ Class ImageUpload
 
 		$newfile = $result['original_name'];
 
-		/* Send headers and file to visitor for download */
+		# Send headers and file to visitor for download
 		header('Content-Description: File Transfer');
 		header('Content-Disposition: attachment; filename='.basename($newfile));
 		header('Expires: 0');
@@ -388,7 +389,7 @@ Class ImageUpload
 		readfile(F_PATH.'/'.$result['name']);
 	}
 #--------------------------------------------------------------------------------------------------
-	/* Delete an image */
+	# Delete an image
 	public function deleteImage($id)
 	{
 		$this->stmt = $this->dbh->prepare("SELECT name, original_name, FROM "
