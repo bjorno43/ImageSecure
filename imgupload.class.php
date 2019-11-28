@@ -335,8 +335,8 @@ Class ImageUpload
 				}
 				if (empty($this->error)) {
 
-					$this->obj->info = $this->info;
-					$this->obj->ids = $this->ids;
+					$this->obj->info = 'Info apa entah';//$this->info;
+					$this->obj->ids = 'Entah';//$this->ids;
 					
 					return $this->obj;
 				} else {
@@ -377,7 +377,7 @@ Class ImageUpload
 	}
 #--------------------------------------------------------------------------------------------------
 	# check $files array from uploadImages($files)
-	public function checkFiles($files,$file,$files,$file,$uploadfile)
+	public function checkFiles($files,$file,$uploadfile)
 	{
 ###################################################################################################
 		# Checks if $file['tmp_name'] is empty. This occurs when a file is bigger than
@@ -398,7 +398,7 @@ Class ImageUpload
 					{
 						# Inserts the file data into the db
 						$this->insertFileToDb($uploadfile, $file);
-						continue;
+						//continue;
 					}
 					else
 					{
