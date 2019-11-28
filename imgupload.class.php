@@ -292,6 +292,12 @@ Class ImageUpload
 		}
 	}
 #--------------------------------------------------------------------------------------------------
+	# Checks if a htaccess file should be created and creates one if needed
+	public function checkHtaccess()
+	{
+
+	}
+#--------------------------------------------------------------------------------------------------
 	# check $files array from uploadImages($files)
 	public function checkFiles($files,$file)
 	{
