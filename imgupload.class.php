@@ -454,6 +454,25 @@ Class ImageUpload
 ###################################################################################################
 	}
 #--------------------------------------------------------------------------------------------------
+	# list image in database
+	public function listImage()
+	{
+		$this->stmt = $this->dbh->prepare("SELECT name, original_name, mime_type "
+		. "FROM `". DB_TABLE ."`");
+
+		try{
+			$this->stmt->execute();
+			$result = $this->stmt->fetch(PDO::FETCH_ASSOC);
+		}
+		catch(PDOException $e){
+			array_push($this->error, $e->getMessage());
+			$this->obj->error = $this->error;
+			return $this->obj;
+		}
+
+		return $result;
+	}
+#--------------------------------------------------------------------------------------------------
 	# Show the image in the browser
 	public function showImage($id)
 	{
