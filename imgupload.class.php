@@ -457,12 +457,12 @@ Class ImageUpload
 	# list image in database
 	public function listImage()
 	{
-		$this->stmt = $this->dbh->prepare("SELECT name, original_name, mime_type "
+		$this->stmt = $this->dbh->prepare("SELECT id,name, original_name, mime_type "
 		. "FROM `". DB_TABLE ."`");
 
 		try{
 			$this->stmt->execute();
-			$result = $this->stmt->fetch(PDO::FETCH_ASSOC);
+			$result = $this->stmt->fetchAll(PDO::FETCH_ASSOC);
 		}
 		catch(PDOException $e){
 			array_push($this->error, $e->getMessage());
@@ -500,8 +500,8 @@ Class ImageUpload
 	# Force a download of the image
 	public function downloadImage($id)
 	{
-		$this->stmt = $this->dbh->prepare("SELECT name, original_name, mime_type FROM "
-		. DB_TABLE . " WHERE id=:id");
+		$this->stmt = $this->dbh->prepare("SELECT name, original_name, mime_type FROM `"
+		. DB_TABLE . "` WHERE id=:id");
 
 		$this->bind(':id', $id);
 
@@ -531,8 +531,8 @@ Class ImageUpload
 	# Delete an image
 	public function deleteImage($id)
 	{
-		$this->stmt = $this->dbh->prepare("SELECT name, original_name, FROM "
-		. DB_TABLE ." WHERE id=:id");
+		$this->stmt = $this->dbh->prepare("SELECT name, original_name, FROM `"
+		. DB_TABLE . "` WHERE id=:id");
 
 		$this->bind(':id', $id);
 
