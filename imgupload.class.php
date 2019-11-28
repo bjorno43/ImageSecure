@@ -48,17 +48,13 @@ Class ImageUpload
         catch(PDOException $e)
 		{
 			# debug error
-			/*echo '<pre>';
-			echo $e->getMessage();
-			echo '</pre>';
-			exit;*/
+			echo '<pre>'; echo $e->getMessage(); echo '</pre>'; exit;
 
-			array_push($this->error, $e->getMessage());
+			/*array_push($this->error, $e->getMessage());
 			$this->obj->error = $this->error;
-			return $this->obj;
+			return $this->obj;*/
 		}
-		#
-		$this->obj = new StdClass;
+		#$this->obj = new StdClass;
 	}
 #--------------------------------------------------------------------------------------------------
 	# Custom bindParam function
@@ -281,8 +277,8 @@ Class ImageUpload
 					{
 						# Inserts the file data into the db
 ###################################################################################################
-		$this->stmt = $this->dbh->prepare("INSERT INTO " . DB_TABLE
-		. " (name, original_name, mime_type) VALUES (:name, :oriname, :mime)");
+		$this->stmt = $this->dbh->prepare("INSERT INTO `" . DB_TABLE
+		. "` (name, original_name, mime_type) VALUES (:name, :oriname, :mime)");
 
 		$this->bind(':name', basename($uploadfile));
 		$this->bind(':oriname', basename($file['name']));
@@ -292,9 +288,12 @@ Class ImageUpload
 				$this->stmt->execute();
 		}
 		catch(PDOException $e){
-			array_push($this->error, $e->getMessage());
+			# debug error
+			echo '<pre>'; echo $e->getMessage(); echo '</pre>'; exit;
+
+			/*array_push($this->error, $e->getMessage());
 			$this->obj->error = $this->error;
-			return $this->obj;
+			return $this->obj;*/
 		}
 
 		array_push($this->ids, $this->dbh->lastInsertId());
@@ -460,7 +459,7 @@ Class ImageUpload
 	public function showImage($id)
 	{
 		$this->stmt = $this->dbh->prepare("SELECT name, original_name, mime_type "
-		. "FROM ". DB_TABLE ." WHERE id=:id");
+		. "FROM `". DB_TABLE ."` WHERE id=:id");
 		$this->bind(':id', $id);
 
 		try{
