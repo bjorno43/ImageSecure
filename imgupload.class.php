@@ -37,8 +37,8 @@ Class ImageUpload
 		$dsn = 'mysql:host=' . $this->host . ';dbname=' . $this->dbname;
 		# Set Set options
         $options = array(
-			PDO::ATTR_PERSISTENT => true,
-			PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+			//PDO::ATTR_PERSISTENT => true,
+			//PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
         );
 		# Create a new PDO instance
         try{
@@ -82,6 +82,7 @@ Class ImageUpload
 	# Checks if the table already exists. If not, creates one
 	private function createTable()
 	{
+		echo '<hr>Nama class :' . __METHOD__ . '<hr>';
 		# Check if table already exists
 		$this->stmt = $this->dbh->prepare("SHOW TABLES LIKE '". DB_TABLE ."'");
 
@@ -237,25 +238,94 @@ Class ImageUpload
 	{
 		# Checks if the required PHP extension(s) are loaded
 		if($this->check_phpExt()){
+			echo '<br> lepas ujian check_phpExt() . ';
 ###################################################################################################
 			# Checks if db table exists. Creates it if nessesary
 			if($this->createTable()){
 				# Checks if a htaccess file should be created and creates one if needed
 				if($this->htaccess){
-					$this->checkHtaccess();
+					if(!$this->createHtaccess()){
+						array_push($this->error, "Unable to create htaccess file.");
+						$this->obj->error = $this->error;
+						return $this->obj;
+					}
 				}
 				
 				# Re-arranges the $_FILES array
 				$files = $this->reArrayFiles($files);
 				foreach($files as $file)
 				{
-					$this->checkFiles($files,$file);
+###################################################################################################
+		# Checks if $file['tmp_name'] is empty. This occurs when a file is bigger than
+		# allowed by the 'post_max_size' and/or 'upload_max_filesize' settings in php.ini
+		if(!empty($file['tmp_name']))
+		{
+			# Checks the true MIME type of the file
+			if($this->check_img_mime($file['tmp_name']))
+			{
+				# Checks the size of the the image
+				if($this->check_img_size($file['tmp_name']))
+				{
+					# Creates a file in the upload directory with a random name
+					$uploadfile = $this->tempnam_sfx($this->folder, ".tmp");
+
+					# Moves the image to the created file
+					if (move_uploaded_file($file['tmp_name'], $uploadfile))
+					{
+						# Inserts the file data into the db
+###################################################################################################
+		$this->stmt = $this->dbh->prepare("INSERT INTO " . DB_TABLE
+		. " (name, original_name, mime_type) VALUES (:name, :oriname, :mime)");
+
+		$this->bind(':name', basename($uploadfile));
+		$this->bind(':oriname', basename($file['name']));
+		$this->bind(':mime', $this->mtype);
+
+		try{
+				$this->stmt->execute();
+		}
+		catch(PDOException $e){
+			array_push($this->error, $e->getMessage());
+			$this->obj->error = $this->error;
+			return $this->obj;
+		}
+
+		array_push($this->ids, $this->dbh->lastInsertId());
+		array_push($this->info, "File: ". $file['name'] . " was succesfully uploaded!");
+###################################################################################################
+						continue;
+					}
+					else
+					{
+						unlink($file['tmp_name']);
+						array_push($this->info, "Unable to move file: " . $file['name']
+						. " to target folder. The file is removed!");
+					}
+				}
+				else
+				{
+					array_push($this->info, "File: " . $file['name']
+					. " exceeds the maximum file size of: "
+					. F_SIZE . "B. The file is removed!");
+				}
+			}
+			else
+			{
+				unlink($file['tmp_name']);
+				array_push($this->info, "File: " . $file['name']
+				. " is not an image. The file is removed!");
+			}
+		}
+		else
+		{
+			array_push($this->info, "File: " . $file['name'] . " exceeds the maximum file size "
+			. "that this server allowes to be uploaded!");
+		}
+###################################################################################################
 				}
 				// Checks if the error array is empty
 				foreach ($this->error as $key => $value) {
-					if (empty($value)) {
-					   unset($this->error[$key]);
-					}
+					if (empty($value)) unset($this->error[$key]);
 				}
 				if (empty($this->error)) {
 
@@ -269,6 +339,7 @@ Class ImageUpload
 					return $this->obj;
 				}
 			} else {
+				echo '<br>2.2 gagal createTable daa ';
 				if($this->error !== NULL){
 					$this->obj->error = $this->error;
 					return $this->obj;
@@ -321,7 +392,7 @@ Class ImageUpload
 					{
 						# Inserts the file data into the db
 						$this->insertFileToDb($uploadfile, $file);
-						continue;
+						//continue;
 					}
 					else
 					{
@@ -355,6 +426,8 @@ Class ImageUpload
 	# Inserts the file data into the db
 	public function insertFileToDb($uploadfile, $file)
 	{
+		# Inserts the file data into the db
+###################################################################################################
 		$this->stmt = $this->dbh->prepare("INSERT INTO " . DB_TABLE
 		. " (name, original_name, mime_type) VALUES (:name, :oriname, :mime)");
 
@@ -373,7 +446,7 @@ Class ImageUpload
 
 		array_push($this->ids, $this->dbh->lastInsertId());
 		array_push($this->info, "File: ". $file['name'] . " was succesfully uploaded!");
-		#
+###################################################################################################
 	}
 #--------------------------------------------------------------------------------------------------
 	# Show the image in the browser
