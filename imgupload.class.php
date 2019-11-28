@@ -47,9 +47,15 @@ Class ImageUpload
 		# Catch any errors
         catch(PDOException $e)
 		{
-			array_push($this->error, $e->getMessage());
+			# debug error
+			echo '<pre>';
+			echo $e->getMessage();
+			echo '</pre>';
+			exit;
+
+			/*array_push($this->error, $e->getMessage());
 			$this->obj->error = $this->error;
-			return $this->obj;
+			return $this->obj;*/
 		}
 		#
 		$this->obj = new StdClass;
@@ -89,6 +95,7 @@ Class ImageUpload
 		try{ $this->stmt->execute(); }
 		catch(PDOException $e)
 		{
+			echo '<hr>line 92:<hr>';
 			array_push($this->error, $e->getMessage());
 			return false;
 		}
