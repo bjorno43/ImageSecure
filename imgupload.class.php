@@ -320,25 +320,7 @@ Class ImageUpload
 					if (move_uploaded_file($file['tmp_name'], $uploadfile))
 					{
 						# Inserts the file data into the db
-						$this->stmt = $this->dbh->prepare("INSERT INTO " . DB_TABLE
-						. " (name, original_name, mime_type) VALUES (:name, :oriname, :mime)");
-
-						$this->bind(':name', basename($uploadfile));
-						$this->bind(':oriname', basename($file['name']));
-						$this->bind(':mime', $this->mtype);
-
-						try{
-							$this->stmt->execute();
-						}
-						catch(PDOException $e){
-							array_push($this->error, $e->getMessage());
-							$this->obj->error = $this->error;
-							return $this->obj;
-						}
-									
-						array_push($this->ids, $this->dbh->lastInsertId());
-						array_push($this->info, "File: ". $file['name'] . " was succesfully uploaded!");
-
+						$this->insertFileToDb($uploadfile, $file);
 						continue;
 					}
 					else
@@ -371,9 +353,27 @@ Class ImageUpload
 	}
 #--------------------------------------------------------------------------------------------------
 	# Inserts the file data into the db
-	public function insertFileToDb()
+	public function insertFileToDb($uploadfile, $file)
 	{
+		$this->stmt = $this->dbh->prepare("INSERT INTO " . DB_TABLE
+		. " (name, original_name, mime_type) VALUES (:name, :oriname, :mime)");
 
+		$this->bind(':name', basename($uploadfile));
+		$this->bind(':oriname', basename($file['name']));
+		$this->bind(':mime', $this->mtype);
+
+		try{
+				$this->stmt->execute();
+		}
+		catch(PDOException $e){
+			array_push($this->error, $e->getMessage());
+			$this->obj->error = $this->error;
+			return $this->obj;
+		}
+
+		array_push($this->ids, $this->dbh->lastInsertId());
+		array_push($this->info, "File: ". $file['name'] . " was succesfully uploaded!");
+		#
 	}
 #--------------------------------------------------------------------------------------------------
 	# Show the image in the browser
