@@ -303,10 +303,11 @@ Class ImageUpload
 	public function checkFiles($files,$file)
 	{
 ###################################################################################################
-					# Checks if $file['tmp_name'] is empty. This occurs when a file is bigger than
-					# allowed by the 'post_max_size' and/or 'upload_max_filesize' settings in php.ini
-					if(!empty($file['tmp_name'])){
-						// Checks the true MIME type of the file
+		# Checks if $file['tmp_name'] is empty. This occurs when a file is bigger than
+		# allowed by the 'post_max_size' and/or 'upload_max_filesize' settings in php.ini
+		if(!empty($file['tmp_name']))
+		{
+			# Checks the true MIME type of the file
 						if($this->check_img_mime($file['tmp_name'])){
 							// Checks the size of the the image
 							if($this->check_img_size($file['tmp_name'])){
@@ -346,9 +347,12 @@ Class ImageUpload
 							unlink($file['tmp_name']);
 							array_push($this->info, "File: ". $file['name'] ." is not an image. The file is removed!");
 						}
-					} else {
-						array_push($this->info, "File: ". $file['name'] ." exceeds the maximum file size that this server allowes to be uploaded!");
-					}
+		}
+		else
+		{
+			array_push($this->info, "File: " . $file['name'] . " exceeds the maximum file size "
+			. "that this server allowes to be uploaded!");
+		}
 ###################################################################################################
 	}
 #--------------------------------------------------------------------------------------------------
