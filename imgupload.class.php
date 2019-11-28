@@ -304,7 +304,7 @@ Class ImageUpload
 							if($this->check_img_size($file['tmp_name'])){
 								// Creates a file in the upload directory with a random name
 								$uploadfile = $this->tempnam_sfx($this->folder, ".tmp");
-								
+
 								// Moves the image to the created file
 								if (move_uploaded_file($file['tmp_name'], $uploadfile)) {
 									// Inserts the file data into the db
