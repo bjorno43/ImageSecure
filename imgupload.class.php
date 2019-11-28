@@ -37,8 +37,8 @@ Class ImageUpload
 		$dsn = 'mysql:host=' . $this->host . ';dbname=' . $this->dbname;
 		# Set Set options
         $options = array(
-			//PDO::ATTR_PERSISTENT => true,
-			//PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+			PDO::ATTR_PERSISTENT => true,
+			PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
         );
 		# Create a new PDO instance
         try{
@@ -48,14 +48,14 @@ Class ImageUpload
         catch(PDOException $e)
 		{
 			# debug error
-			echo '<pre>';
+			/*echo '<pre>';
 			echo $e->getMessage();
 			echo '</pre>';
-			exit;
+			exit;*/
 
-			/*array_push($this->error, $e->getMessage());
+			array_push($this->error, $e->getMessage());
 			$this->obj->error = $this->error;
-			return $this->obj;*/
+			return $this->obj;
 		}
 		#
 		$this->obj = new StdClass;
@@ -88,7 +88,7 @@ Class ImageUpload
 	# Checks if the table already exists. If not, creates one
 	private function createTable()
 	{
-		echo '<hr>Nama class :' . __METHOD__ . '<hr>';
+		//echo '<hr>Nama class :' . __METHOD__ . '<hr>';
 		# Check if table already exists
 		$this->stmt = $this->dbh->prepare("SHOW TABLES LIKE '". DB_TABLE ."'");
 
@@ -245,7 +245,7 @@ Class ImageUpload
 	{
 		# Checks if the required PHP extension(s) are loaded
 		if($this->check_phpExt()){
-			echo '<br> lepas ujian check_phpExt() . ';
+			//echo '<br> lepas ujian check_phpExt() . ';
 ###################################################################################################
 			# Checks if db table exists. Creates it if nessesary
 			if($this->createTable()){
@@ -346,7 +346,7 @@ Class ImageUpload
 					return $this->obj;
 				}
 			} else {
-				echo '<br>2.2 gagal createTable daa ';
+				//echo '<br>2.2 gagal createTable daa ';
 				if($this->error !== NULL){
 					$this->obj->error = $this->error;
 					return $this->obj;
