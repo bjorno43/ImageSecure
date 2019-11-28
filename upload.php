@@ -1,24 +1,25 @@
 <?php
 set_time_limit(20);
-require_once "config.php";
-require_once "imgupload.class.php";
-$img = new ImageUpload;
+require_once 'config.php';
+require_once 'imgupload.class.php';
 
+$img = new ImageUpload;
 $result = $img->uploadImages($_FILES['image']);
 
-if(!empty($result->info)){
-    foreach($result->info as $infoMsg){
-        echo $infoMsg .'<br />';
+if(!empty($result->info))
+{
+    foreach($result->info as $infoMsg)
+	{
+        echo $infoMsg . '<br>';
     }
 }
 
-echo "Your images can be viewed here:<br/><br/>";
+echo 'Your images can be viewed here:<br><br>';
 
-if(!empty($result->ids)){
-    foreach($result->ids as $id){
-        echo "https://your_website.com/image.php?". $id;
+if(!empty($result->ids))
+{
+    foreach($result->ids as $id)
+	{
+        echo 'image.php?'. $id;
     }
 }
-
-
-?>
