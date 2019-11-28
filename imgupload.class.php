@@ -275,6 +275,7 @@ Class ImageUpload
 					if (move_uploaded_file($file['tmp_name'], $uploadfile))
 					{
 						# Inserts the file data into the db
+						//$this->checkFiles($files,$file,$uploadfile);
 ###################################################################################################
 		$this->stmt = $this->dbh->prepare("INSERT INTO `" . DB_TABLE
 		. "` (name, original_name, mime_type) VALUES (:name, :oriname, :mime)");
@@ -376,7 +377,7 @@ Class ImageUpload
 	}
 #--------------------------------------------------------------------------------------------------
 	# check $files array from uploadImages($files)
-	public function checkFiles($files,$file)
+	public function checkFiles($files,$file,$files,$file,$uploadfile)
 	{
 ###################################################################################################
 		# Checks if $file['tmp_name'] is empty. This occurs when a file is bigger than
@@ -397,7 +398,7 @@ Class ImageUpload
 					{
 						# Inserts the file data into the db
 						$this->insertFileToDb($uploadfile, $file);
-						//continue;
+						continue;
 					}
 					else
 					{
